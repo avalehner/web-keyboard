@@ -1,5 +1,3 @@
-console.log("Hello!");
-
 const keys = {
   KeyA: {
     frequency: 261.63,
