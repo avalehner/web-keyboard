@@ -35,7 +35,41 @@ const keys = {
   KeyJ: {
     frequency: 493.88,
   },
+  KeyK: {
+    frequency: 523.25, 
+  }
 }
+
+const contexts = [];
+
+const createAudioCtxAndStart = (frequency) => {
+    // Create audio context
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Create oscillator
+    osc = audioCtx.createOscillator();
+    osc.type = "sine";
+
+    // Create gain node
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0.2; // 20% volume - safe for headphones
+
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    // Set frequency
+    osc.frequency.value = parseFloat(frequency);
+
+    osc.start();
+
+    contexts.push(audioCtx);
+}
+
+const closeAllAudioContexts = () => {
+  contexts.forEach(ctx => ctx.close())
+}
+
+let oscOff = true;
 
 const toKebabCase = (keyCode) => {
   return keyCode.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1);
@@ -53,6 +87,12 @@ window.addEventListener("keydown", (event) => {
 
     console.log(noteSelectorId);
     console.log(key.frequency);
+
+    if (oscOff) {
+      console.log("Starting osc...")
+      createAudioCtxAndStart(key.frequency);
+      oscOff = false;
+    }
   }
 });
 
@@ -63,5 +103,11 @@ window.addEventListener("keyup", (event) => {
 
   for (let index = 0; index < notes.length; index++) {
     notes[index].classList.remove('note-pressed')
+  }
+
+  if (!oscOff) {
+    console.log("Stopping osc...")
+    closeAllAudioContexts();
+    oscOff = true;
   }
 });
