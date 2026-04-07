@@ -48,7 +48,6 @@ window.addEventListener("keydown", (event) => {
 
   if (key) {
     const noteSelectorId = toKebabCase(event.code);
-    // add light background
 
     document.getElementById(noteSelectorId).classList.add('note-pressed')
 
