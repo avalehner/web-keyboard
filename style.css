@@ -1,13 +1,59 @@
 .container {
-  display: flex;
-  gap: 0.5rem;
+  display: flex; 
+  justify-content: center; 
+}
+
+.piano-container {
+  position: relative; 
+  display: flex; 
+  width: fit-content; 
+  border: 1px solid black; 
 }
 
 .note {
   border: solid 1px;
-  padding: 0.5rem;
+  /* padding: 0.5rem 0.5rem 10rem 0.5rem;  */
 }
 
-.note-pressed {
-  background-color: gray; 
+.white {
+  width: 52px; 
+  height: 200px; 
+  background: white; 
+  border: 1px solid black; 
+  box-sizing: border-box; 
+  z-index: 1; 
+  display: flex; 
+  align-items: flex-end; 
+  justify-content: center; 
+  padding-bottom: 8px; 
+  font-size: 11px; 
+  text-align: center; 
 }
+
+.black {
+  position: absolute; 
+  top: 3;
+  width: 32px; 
+  height: 125px; 
+  background: black; 
+  color: white; 
+  z-index: 2; 
+  display: flex; 
+  align-items: flex-end; 
+  justify-content: center; 
+  padding-bottom: 8px; 
+  font-size: 10px; 
+  text-align: center; 
+  border: 1px solid #333; 
+  box-sizing: border-box; 
+}
+
+#key-w { left: 584px; }
+#key-e { left: 636px; }
+#key-t { left: 740px; }
+#key-y { left: 792px; }
+#key-u { left: 844px; }
+
+.note-pressed.white { background: #ccc; }
+.note-pressed.black { background: #555; }
+
