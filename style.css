@@ -48,11 +48,11 @@
   box-sizing: border-box; 
 }
 
-#key-w { left: 584px; }
-#key-e { left: 636px; }
-#key-t { left: 740px; }
-#key-y { left: 792px; }
-#key-u { left: 844px; }
+#key-w { left: 36px; }
+#key-e { left: 88px; }
+#key-t { left: 192px; }
+#key-y { left: 244px; }
+#key-u { left: 296px; }
 
 .note-pressed.white { background: #ccc; }
 .note-pressed.black { background: #555; }
