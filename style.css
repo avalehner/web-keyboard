@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.key {
+  border: solid 1px;
+  padding: 0.5rem;
+}
