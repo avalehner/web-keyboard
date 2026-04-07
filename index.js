@@ -1,81 +1,104 @@
 const keys = {
   KeyA: {
     frequency: 261.63,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyW: {
     frequency: 277.18,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyS: {
     frequency: 296.66,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyE: {
-    frequency: 311.13
+    frequency: 311.13,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyD: {
     frequency: 329.63,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyF: {
     frequency: 349.23,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyT: {
     frequency: 369.99,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyG: {
     frequency: 392.00,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyY: {
     frequency: 415.30,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyH: {
     frequency: 440.00,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyU: {
     frequency: 466.16,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyJ: {
     frequency: 493.88,
+    oscillator: null,
+    isPlaying: false,
   },
   KeyK: {
-    frequency: 523.25, 
+    frequency: 523.25,
+    oscillator: null,
+    isPlaying: false,
   }
 }
 
-const contexts = [];
+const buildAudioContextAndReturnOscillator = (frequency) => {
+  // Create audio context
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-const createAudioCtxAndStart = (frequency) => {
-    // Create audio context
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // Create oscillator
+  oscillator = audioCtx.createOscillator();
+  oscillator.type = "sine";
 
-    // Create oscillator
-    osc = audioCtx.createOscillator();
-    osc.type = "sine";
+  // Create gain node
+  const gainNode = audioCtx.createGain();
+  gainNode.gain.value = 0.2; // 20% volume - safe for headphones
 
-    // Create gain node
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.value = 0.2; // 20% volume - safe for headphones
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
 
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+  // Set frequency
+  oscillator.frequency.value = frequency;
 
-    // Set frequency
-    osc.frequency.value = parseFloat(frequency);
-
-    osc.start();
-
-    contexts.push(audioCtx);
+  return oscillator;
 }
 
-const closeAllAudioContexts = () => {
-  contexts.forEach(ctx => ctx.close())
-}
+// Initialize keys / notes
+Object.values(keys).forEach((el) => {
+  el.oscillator = buildAudioContextAndReturnOscillator(el.frequency)
+})
 
-let oscOff = true;
+console.log(keys)
 
 const toKebabCase = (keyCode) => {
   return keyCode.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1);
 }
 
-window.addEventListener("keydown", (event) => {
+const startKeyPlay = (event) => {
   event.preventDefault();
 
   const key = keys[event.code];
@@ -85,18 +108,15 @@ window.addEventListener("keydown", (event) => {
 
     document.getElementById(noteSelectorId).classList.add('note-pressed')
 
-    console.log(noteSelectorId);
-    console.log(key.frequency);
-
-    if (oscOff) {
-      console.log("Starting osc...")
-      createAudioCtxAndStart(key.frequency);
-      oscOff = false;
+    if (!key.isPlaying) {
+      console.log(`Starting osc for key: ${event.code}...`);
+      key.oscillator.start();
+      key.isPlaying = true;
     }
   }
-});
+}
 
-window.addEventListener("keyup", (event) => {
+const stopKeyPlay = (event) => {
   event.preventDefault();
 
   const notes = document.getElementsByClassName("note");
@@ -105,9 +125,23 @@ window.addEventListener("keyup", (event) => {
     notes[index].classList.remove('note-pressed')
   }
 
-  if (!oscOff) {
-    console.log("Stopping osc...")
-    closeAllAudioContexts();
-    oscOff = true;
+  const key = keys[event.code];
+
+  if (key) {
+    if (key.isPlaying) {
+      console.log("Stopping oscillator...")
+      key.oscillator.stop();
+      key.isPlaying = false;
+
+      console.log("Building new context...");
+
+      const newOscillator = buildAudioContextAndReturnOscillator(key.frequency);
+
+      key.oscillator = newOscillator;
+    }
   }
-});
+}
+
+window.addEventListener("keydown", startKeyPlay);
+
+window.addEventListener("keyup", stopKeyPlay);
