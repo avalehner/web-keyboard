@@ -7,3 +7,7 @@
   border: solid 1px;
   padding: 0.5rem;
 }
+
+.note-pressed {
+  background-color: gray; 
+}

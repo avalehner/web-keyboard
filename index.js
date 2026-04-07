@@ -42,9 +42,17 @@ const toKebabCase = (keyCode) => {
 }
 
 window.addEventListener("keydown", (event) => {
+  event.preventDefault();
+
   const key = keys[event.code];
 
   if (key) {
+    const noteSelectorId = toKebabCase(event.code);
+    // add light background
+
+    document.getElementById(noteSelectorId).classList.add('note-pressed')
+
+    console.log(noteSelectorId);
     console.log(key.frequency);
   }
 });
