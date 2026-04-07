@@ -56,3 +56,13 @@ window.addEventListener("keydown", (event) => {
     console.log(key.frequency);
   }
 });
+
+window.addEventListener("keyup", (event) => {
+  event.preventDefault();
+
+  const notes = document.getElementsByClassName("note");
+
+  for (let index = 0; index < notes.length; index++) {
+    notes[index].classList.remove('note-pressed')
+  }
+});
