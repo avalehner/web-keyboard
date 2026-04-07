@@ -34,7 +34,11 @@ const keys = {
   },
   KeyJ: {
     frequency: 493.88,
-  }
+  },
+}
+
+const toKebabCase = (keyCode) => {
+  return keyCode.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1);
 }
 
 window.addEventListener("keydown", (event) => {
